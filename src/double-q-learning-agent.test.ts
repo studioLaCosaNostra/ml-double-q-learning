@@ -18,10 +18,18 @@ describe('Q-Learning', () => {
     agent.reward(step3, step3.action === actionFalse ? 1 : -1);
     const step4 = await agent.play('PlayActionTrue');
     agent.reward(step4, step4.action === actionTrue ? 1 : -1);
-    await agent.learn();
     const step5 = await agent.play('PlayActionFalse');
-    expect(step5.action).toBe(actionFalse);
+    agent.reward(step5, step5.action === actionFalse ? 1 : -1);
     const step6 = await agent.play('PlayActionTrue');
-    expect(step6.action).toBe(actionTrue);
+    agent.reward(step6, step6.action === actionTrue ? 1 : -1);
+    const step7 = await agent.play('PlayActionFalse');
+    agent.reward(step7, step7.action === actionFalse ? 1 : -1);
+    const step8 = await agent.play('PlayActionTrue');
+    agent.reward(step8, step8.action === actionTrue ? 1 : -1);
+    await agent.learn();
+    const step9 = await agent.play('PlayActionFalse');
+    expect(step9.action).toBe(actionFalse);
+    const step10 = await agent.play('PlayActionTrue');
+    expect(step10.action).toBe(actionTrue);
   })
 })
