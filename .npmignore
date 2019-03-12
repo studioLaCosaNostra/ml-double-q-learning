@@ -1,0 +1,6 @@
+.git/
+node_modules/
+src/
+npm-debug.log
+jest.config.js
+tsconfig.json
