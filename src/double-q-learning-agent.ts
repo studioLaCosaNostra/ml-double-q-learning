@@ -31,15 +31,15 @@ export class DoubleQLearningAgent<TAction = any> extends QLearningAgent<TAction>
     return actionIndex;
   }
   
-  protected async learningAlgorithm(action: number, reward: number, stateSerialized: string, stateSerializedPrime: string): Promise<[string, number[]]> {
+  protected async learningAlgorithm(action: number, reward: number, stateSerialized: string, stateSerializedPrime: string, getState: (stateSerialized: string) => Promise<number[]>): Promise<[string, number[]]> {
     const selectedUpdate: SelectedUpdate = chooseRandomUpdate();
     if (selectedUpdate === SelectedUpdate.A) {
       const stateSerializedAPrime = `A${stateSerializedPrime}`;
       const actionPrime = await this.greedyPickAction(stateSerializedAPrime);
       const stateSerializedA = `A${stateSerialized}`;
-      const actionsStatsA: number[] = await this.memory.getState(stateSerializedA);
+      const actionsStatsA: number[] = await getState(stateSerializedA);
       const stateSerializedBPrime = `B${stateSerializedPrime}`;
-      const actionsStatsBPrime: number[] = await this.memory.getState(stateSerializedBPrime);
+      const actionsStatsBPrime: number[] = await getState(stateSerializedBPrime);
       actionsStatsA[action] = actionsStatsA[action] + this.learningRate * (reward + (this.discountFactor * actionsStatsBPrime[actionPrime]) - actionsStatsA[action]);
       return [stateSerializedA, actionsStatsA];
     }
@@ -47,9 +47,9 @@ export class DoubleQLearningAgent<TAction = any> extends QLearningAgent<TAction>
       const stateSerializedBPrime = `B${stateSerializedPrime}`;
       const actionPrime = await this.greedyPickAction(stateSerializedBPrime);
       const stateSerializedB = `B${stateSerialized}`;
-      const actionsStatsB: number[] = await this.memory.getState(stateSerializedB);
+      const actionsStatsB: number[] = await getState(stateSerializedB);
       const stateSerializedAPrime = `A${stateSerializedPrime}`;
-      const actionsStatsAPrime: number[] = await this.memory.getState(stateSerializedAPrime);
+      const actionsStatsAPrime: number[] = await getState(stateSerializedAPrime);
       actionsStatsB[action] = actionsStatsB[action] + this.learningRate * (reward + (this.discountFactor * actionsStatsAPrime[actionPrime]) - actionsStatsB[action]);
       return [stateSerializedB, actionsStatsB];
     }
