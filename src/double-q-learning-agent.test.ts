@@ -1,8 +1,6 @@
 import { DoubleQLearningAgent } from './double-q-learning-agent';
-import '@tensorflow/tfjs-node';
-
-describe('Q-Learning', () => {
-  test('create Q-Learning agent', () => {
+describe('Double Q-Learning', () => {
+  test('create Double Q-Learning agent', () => {
     new DoubleQLearningAgent(['1', 2]);
   });
 
